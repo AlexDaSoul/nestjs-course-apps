@@ -11,7 +11,7 @@ import {
 
 @Controller('app')
 export class AppController {
-  private helloWorldText = 'Hello World!';
+  private helloWorldText: string = 'Hello World!';
   private helloWorldState: string;
 
   // Simple Get
@@ -29,7 +29,6 @@ export class AppController {
   // Advanced Get with param
   @Get('/adv')
   public getAdvNameHelloWorld(@Query('name') name: string): string {
-    console.log(name);
     return this.getHelloText(name);
   }
 
