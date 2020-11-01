@@ -1,7 +1,6 @@
 import { Controller, Get, Req, UseGuards, Session } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Express } from 'express';
-// import { SessionData } from 'express-session';
 import { AuthService } from './auth.service';
 import { LoginGuard } from './guards/login.guard';
 import { SessionGuard } from './guards/session.guard';
@@ -13,7 +12,9 @@ export class AuthController {
 
   @Get()
   @UseGuards(AuthGuard('google'))
-  public async googleAuth(@Req() req: Request) {}
+  public async googleAuth(@Req() req: Request) {
+    console.log(`Redirect to: ${req.headers['location']}`);
+  }
 
   @Get('redirect')
   @UseGuards(LoginGuard)

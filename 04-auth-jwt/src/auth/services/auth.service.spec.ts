@@ -37,7 +37,7 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('Successfully login', async () => {
+    it('Success login', async () => {
       jest
         .spyOn(service, 'login')
         .mockImplementation(() => Promise.resolve(token));

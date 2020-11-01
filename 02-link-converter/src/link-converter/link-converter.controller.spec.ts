@@ -1,18 +1,27 @@
+import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { LinkConverterController } from './link-converter.controller';
+import { LinkConverterService } from './link-converter.service';
 
-describe('AppController (e2e)', () => {
+describe('LinkConverterController', () => {
   let app: INestApplication;
+  let controller: LinkConverterController;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [LinkConverterController],
+      providers: [LinkConverterService],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    controller = module.get<LinkConverterController>(LinkConverterController);
+
+    app = module.createNestApplication();
     await app.init();
+  });
+
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
   });
 
   it(`/POST /converter`, () => {

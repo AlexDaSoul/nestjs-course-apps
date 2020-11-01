@@ -15,10 +15,27 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it(`CRUD test`, () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .get('/app/state')
+      .expect(res => {
+        expect(res.text).toBe('Hello undefined!');
+      })
+      .then(() => request(app.getHttpServer()).put('/app/simple/People'))
+      .then(() =>
+        request(app.getHttpServer())
+          .get('/app/state')
+          .expect(res => {
+            expect(res.text).toBe('Hello People!');
+          }),
+      )
+      .then(() => request(app.getHttpServer()).delete('/app/simple'))
+      .then(() =>
+        request(app.getHttpServer())
+          .get('/app/state')
+          .expect(res => {
+            expect(res.text).toBe('Hello undefined!');
+          }),
+      );
   });
 });

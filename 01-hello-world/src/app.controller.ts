@@ -11,7 +11,7 @@ import {
 
 @Controller('app')
 export class AppController {
-  private helloWorldText: string = 'Hello World!';
+  private helloWorldText = 'Hello World!';
   private helloWorldState: string;
 
   // Simple Get
@@ -49,6 +49,8 @@ export class AppController {
   // Simple Delete
   @Delete('simple')
   public deleteStateHelloWorld(): string {
+    this.helloWorldState = undefined;
+
     return `Hello World state was deleted`;
   }
 

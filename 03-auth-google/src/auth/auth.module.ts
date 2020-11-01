@@ -2,7 +2,7 @@ import { Module, MiddlewareConsumer } from '@nestjs/common';
 import * as expressSession from 'express-session';
 import { initialize, session } from 'passport';
 import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { GoogleStrategy } from './passport/google.strategy';
 import { SessionSerializer } from './passport/session.serializer';
 
