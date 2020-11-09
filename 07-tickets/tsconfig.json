@@ -10,6 +10,10 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@dal": ["src/dal"],
+      "@dal/*": ["src/dal/*"]
+    }
   }
 }
