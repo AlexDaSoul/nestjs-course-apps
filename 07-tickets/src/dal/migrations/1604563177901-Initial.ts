@@ -1,9 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class Initial1604563177901 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
 create table if not exists managers
 (
     id uuid default uuid_generate_v4() not null,
@@ -31,11 +30,10 @@ create table if not exists tickets
         foreign key ("managerId") references managers
 );
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`drop table if exists managers`);
-        await queryRunner.query(`drop table if exists tickets`);
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`drop table if exists managers`);
+    await queryRunner.query(`drop table if exists tickets`);
+  }
 }

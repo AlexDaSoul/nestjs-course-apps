@@ -8,20 +8,20 @@ import { AppModule } from './app.module';
 const redisAdapter = redisIoAdapter({ host: 'localhost', port: 6379 });
 
 class RedisIoAdapter extends IoAdapter {
-    createIOServer(port: number, options?: ServerOptions): any {
-        const server = super.createIOServer(port, options);
-        server.adapter(redisAdapter);
-        return server;
-    }
+  createIOServer(port: number, options?: ServerOptions): any {
+    const server = super.createIOServer(port, options);
+    server.adapter(redisAdapter);
+    return server;
+  }
 }
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-    app.useGlobalPipes(new ValidationPipe());
-    app.useWebSocketAdapter(new RedisIoAdapter(app));
+  app.useGlobalPipes(new ValidationPipe());
+  app.useWebSocketAdapter(new RedisIoAdapter(app));
 
-    await app.listen(3000);
+  await app.listen(3000);
 }
 
 bootstrap();

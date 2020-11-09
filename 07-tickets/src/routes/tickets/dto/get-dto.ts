@@ -1,6 +1,6 @@
 import { IsUUID } from 'class-validator';
 
 export class GetDTO {
-    @IsUUID()
-    public id?: string;
+  @IsUUID()
+  public id?: string;
 }

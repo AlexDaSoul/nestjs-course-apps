@@ -3,7 +3,6 @@ import { ManagersModule } from './managers/managers.module';
 import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
-    imports: [ManagersModule, TicketsModule],
+  imports: [ManagersModule, TicketsModule],
 })
-export class RoutesModule {
-}
+export class RoutesModule {}

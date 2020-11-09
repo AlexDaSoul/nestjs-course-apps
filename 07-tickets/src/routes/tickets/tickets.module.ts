@@ -5,9 +5,8 @@ import { TicketsService } from './tickets.service';
 import { WsGatewayGateway } from './ws-gateway.gateway';
 
 @Module({
-    imports: [DalModule],
-    controllers: [TicketsController],
-    providers: [TicketsService, WsGatewayGateway],
+  imports: [DalModule],
+  controllers: [TicketsController],
+  providers: [TicketsService, WsGatewayGateway],
 })
-export class TicketsModule {
-}
+export class TicketsModule {}

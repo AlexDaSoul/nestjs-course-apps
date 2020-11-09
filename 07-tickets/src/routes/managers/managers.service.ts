@@ -1,65 +1,73 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Manager } from '@dal/entities/manager.entity';
 import { ManagersDalService } from '@dal/services/managers-dal.service';
 
 @Injectable()
 export class ManagersService {
-    constructor(private readonly managersDalService: ManagersDalService) {
+  constructor(private readonly managersDalService: ManagersDalService) {}
+
+  public async createManager(manager: Manager): Promise<{ id: string }> {
+    const findManagerByName = await this.managersDalService.findOne({
+      name: manager.name,
+    });
+
+    if (findManagerByName) {
+      throw new HttpException(
+        `Manager '${manager.name}' already exists`,
+        HttpStatus.FORBIDDEN,
+      );
     }
 
-    public async createManager(manager: Manager): Promise<{ id: string }> {
-        const findManagerByName = await this.managersDalService.findOne({ name: manager.name });
+    const result = await this.managersDalService.insert(manager);
 
-        if (findManagerByName) {
-            throw new HttpException(
-                `Manager '${ manager.name }' already exists`,
-                HttpStatus.FORBIDDEN,
-            );
-        }
+    return {
+      id: result.identifiers[0].id,
+    };
+  }
 
-        const result = await this.managersDalService.insert(manager);
+  public async updateManager(manager: Manager): Promise<void> {
+    await this.getManagerById(manager.id);
 
-        return {
-            id: result.identifiers[0].id,
-        };
+    const findManagerByName = await this.managersDalService.findOne({
+      name: manager.name,
+    });
+
+    if (findManagerByName && findManagerByName.id !== manager.id) {
+      throw new HttpException(
+        `Manager '${manager.name}' already exists`,
+        HttpStatus.FORBIDDEN,
+      );
     }
 
-    public async updateManager(manager: Manager): Promise<void> {
-        await this.getManagerById(manager.id);
+    await this.managersDalService.update(manager.id, manager);
+  }
 
-        const findManagerByName = await this.managersDalService.findOne({ name: manager.name });
+  public async deleteManager(id: string): Promise<void> {
+    const findManager = await this.getManagerById(id);
 
-        if (findManagerByName && findManagerByName.id !== manager.id) {
-            throw new HttpException(
-                `Manager '${ manager.name }' already exists`,
-                HttpStatus.FORBIDDEN,
-            );
-        }
-
-        await this.managersDalService.update(manager.id, manager);
+    if (!findManager) {
+      throw new NotFoundException('Manager not found');
     }
 
-    public async deleteManager(id: string): Promise<void> {
-        const findManager = await this.getManagerById(id);
+    await this.managersDalService.delete(id);
+  }
 
-        if (! findManager) {
-            throw new NotFoundException('Manager not found');
-        }
+  public async getManagerById(id: string): Promise<Manager> {
+    const result = await this.managersDalService.findOneById(id);
 
-        await this.managersDalService.delete(id);
+    if (!result) {
+      throw new NotFoundException('Manager not found');
     }
 
-    public async getManagerById(id: string): Promise<Manager> {
-        const result = await this.managersDalService.findOneById(id);
+    return result;
+  }
 
-        if (! result) {
-            throw new NotFoundException('Manager not found');
-        }
-
-        return result;
-    }
-
-    public async getAllManagers(): Promise<Manager[]> {
-        return await this.managersDalService.findAll();
-    }
+  public async getAllManagers(): Promise<Manager[]> {
+    return await this.managersDalService.findAll();
+  }
 }

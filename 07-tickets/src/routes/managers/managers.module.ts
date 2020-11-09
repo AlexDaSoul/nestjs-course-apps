@@ -4,9 +4,8 @@ import { ManagersController } from './managers.controller';
 import { ManagersService } from './managers.service';
 
 @Module({
-    imports: [DalModule],
-    controllers: [ManagersController],
-    providers: [ManagersService],
+  imports: [DalModule],
+  controllers: [ManagersController],
+  providers: [ManagersService],
 })
-export class ManagersModule {
-}
+export class ManagersModule {}

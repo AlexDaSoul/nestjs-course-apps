@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { RoutesModule } from './routes/routes.module';
 
 @Module({
-    imports: [RoutesModule],
+  imports: [RoutesModule],
 })
-export class AppModule {
-}
+export class AppModule {}
