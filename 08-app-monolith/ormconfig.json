@@ -1,0 +1,26 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "postgres",
+    "database": "tickets",
+    "entities": [
+        "src/dal/entities/**/*.entity{.ts,.js}",
+        "dist/**/*.entity{.ts,.js}"
+    ],
+    "subscribers": [
+        "src/dal/subscribers/**/*.subscriber{.ts,.js}",
+        "dist/subscribers/**/*.subscriber{.ts,.js}"
+    ],
+    "migrations": [
+        "src/dal/migrations/*{.ts,.js}"
+    ],
+    "synchronize": false,
+    "cli": {
+        "entitiesDir": "src/dal/entities",
+        "subscribersDir": "src/dal/subscribers",
+        "migrationsDir": "src/dal/migrations"
+    },
+    "keepConnectionAlive": true
+}
