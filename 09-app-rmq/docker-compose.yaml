@@ -1,0 +1,60 @@
+version: "3.7"
+
+volumes:
+  postgres-data:
+  redis-data:
+  redis-conf:
+  nats:
+
+services:
+
+  #### nats
+  nats:
+    container_name: nats
+    image: bitnami/nats:2
+    ports:
+      - ${NATS_PORT:-4222}:4222
+      - 8222:8222
+    volumes:
+      - nats:/etc/nats
+
+  #### postgres
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    restart: always
+    ports: # for debug puproses, remove in the production
+      - ${PGPORT:-5432}:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-tickets}
+      - PGPORT=${PGPORT:-5432}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  #### pgadmin
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - ${PGADMIN_DEFAULT_PORT:-5555}:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+
+  #### redis
+  redis:
+    container_name: redis
+    image: redis:6
+    command: redis-server
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    volumes:
+      - redis-data:/var/lib/redis
+      - redis-conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=${REDIS_REPLICATION_MODE:-master}

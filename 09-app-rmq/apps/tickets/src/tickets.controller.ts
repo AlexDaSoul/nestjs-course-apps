@@ -33,12 +33,18 @@ export class TicketsController {
   }
 
   @Put()
-  public async update(@Body() body: UpdateTicketDTO, @Req() req: Request & { payload: any; }): Promise<void> {
+  public async update(
+    @Body() body: UpdateTicketDTO,
+    @Req() req: Request & { payload: any },
+  ): Promise<void> {
     return await this.ticketsService.updateTicket(body, req.payload.id);
   }
 
   @Delete()
-  public async delete(@Body() body: TicketUuidDTO, @Req() req: Request & { payload: any; }): Promise<void> {
+  public async delete(
+    @Body() body: TicketUuidDTO,
+    @Req() req: Request & { payload: any },
+  ): Promise<void> {
     return await this.ticketsService.deleteTicket(body.id, req.payload.id);
   }
 

@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "paths": {
+      "@dal": [
+        "libs/dal/src"
+      ],
+      "@dal/*": [
+        "libs/dal/src/*"
+      ],
+      "@jws": [
+        "libs/jws/src"
+      ],
+      "@jws/*": [
+        "libs/jws/src/*"
+      ],
+      "@health": [
+        "libs/health/src"
+      ],
+      "@health/*": [
+        "libs/health/src/*"
+      ]
+    }
+  }
+}
