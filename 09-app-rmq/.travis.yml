@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - 14
+cache: npm
+
+services:
+  - auth
+  - tickets
+  - user
+
+before_script:
+  - npm install -g @nestjs/cli
+  - npm install
+
+script:
+  - npm run lint
