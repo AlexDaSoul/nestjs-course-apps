@@ -10,6 +10,7 @@ services:
 
 before_script:
   - npm install -g @nestjs/cli
+  - cd 09-app-rmq
   - npm install
 
 script:
