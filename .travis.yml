@@ -3,11 +3,6 @@ node_js:
   - 14
 cache: npm
 
-services:
-  - auth
-  - tickets
-  - user
-
 before_script:
   - npm install -g @nestjs/cli
   - cd 09-app-rmq
@@ -15,8 +10,12 @@ before_script:
 
 script:
   - npm run lint
+  
+after_success:
+  - nest build auth
+  - nest build user
+  - nest build tickets
 
-# safelist
 branches:
   only:
     - main
