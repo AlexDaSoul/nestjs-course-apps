@@ -16,6 +16,14 @@ after_success:
   - nest build user
   - nest build tickets
 
-branches:
-  only:
-    - main
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: nestjs-course
+  env: NestjsCourse-env
+  bucket_name: elasticbeanstalk-us-east-2-053496966641
+  bucket_path: nestjs-course
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
