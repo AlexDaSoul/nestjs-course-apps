@@ -6,6 +6,8 @@ export class LinkConverterController {
   constructor(private readonly linkConverterService: LinkConverterService) {}
 
   // https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%80%D1%82%D0%B0%D0%BB:%D0%A2%D0%B5%D0%BA%D1%83%D1%89%D0%B8%D0%B5_%D1%81%D0%BE%D0%B1%D1%8B%D1%82%D0%B8%D1%8F
+  // curl -X POST -d "link=" http://localhost:3000/converter
+  // Invoke-RestMethod -Method Post -Body "link=" -Uri http://localhost:3000/converter
   @Post('converter')
   public convert(@Body('link') link: string): string {
     return this.linkConverterService.decodeURI(link);

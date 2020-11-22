@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "postinstall": "ssh-keygen -t rsa -N '' -f ./src/jws/pki/dev.pem -m PEM",
+    "postinstall": "ssh-keygen -t rsa -N \"\" -f ./src/jws/pki/dev.pem -m PEM",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

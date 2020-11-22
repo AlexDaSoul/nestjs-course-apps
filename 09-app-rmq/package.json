@@ -9,7 +9,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
-    "pkidev:gen": "ssh-keygen -t rsa -N '' -f src/lib/jws/pki/dev.pem -m PEM",
+    "pkidev:gen": "ssh-keygen -t rsa -N \"\" -f libs/jws/src/pki/dev.pem -m PEM",
     "docker:start": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "start": "nest start",
