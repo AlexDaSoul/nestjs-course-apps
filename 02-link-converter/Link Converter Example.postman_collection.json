@@ -1,0 +1,38 @@
+{
+	"id": "9722a887-1f48-d309-d9b8-31cc389e9449",
+	"name": "Link Converter Example",
+	"description": "",
+	"order": [
+		"19a89526-e239-5612-8651-b0e2789646d3"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1604058735058,
+	"owner": "5782217",
+	"public": false,
+	"requests": [
+		{
+			"id": "19a89526-e239-5612-8651-b0e2789646d3",
+			"headers": "",
+			"headerData": [],
+			"url": "",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "9722a887-1f48-d309-d9b8-31cc389e9449",
+			"data": null,
+			"dataMode": "params",
+			"name": "Convert POST",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1604058760475,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		}
+	]
+}

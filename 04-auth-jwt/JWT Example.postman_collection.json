@@ -1,0 +1,62 @@
+{
+	"id": "769c9667-97b8-dd01-8be8-b032642049dc",
+	"name": "JWT Example",
+	"description": "",
+	"order": [
+		"a425f0fe-4105-8241-c929-a29ddc75c36a",
+		"e4b9f1af-aceb-aa48-fd58-250d43f572c6"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1604069633375,
+	"owner": "5782217",
+	"public": false,
+	"requests": [
+		{
+			"id": "a425f0fe-4105-8241-c929-a29ddc75c36a",
+			"headers": "",
+			"headerData": [],
+			"url": "",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "769c9667-97b8-dd01-8be8-b032642049dc",
+			"data": null,
+			"dataMode": "params",
+			"name": "Auth POST",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1604069654361,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "e4b9f1af-aceb-aa48-fd58-250d43f572c6",
+			"headers": "",
+			"headerData": [],
+			"url": "",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "769c9667-97b8-dd01-8be8-b032642049dc",
+			"data": null,
+			"dataMode": "params",
+			"name": "Get profile GET",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1604076966713,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		}
+	]
+}
