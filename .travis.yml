@@ -1,0 +1,29 @@
+language: node_js
+node_js:
+  - 14
+cache: npm
+
+before_script:
+  - npm install -g @nestjs/cli
+  - cd 09-app-rmq
+  - npm install
+
+script:
+  - npm run lint
+  
+after_success:
+  - nest build auth
+  - nest build user
+  - nest build tickets
+
+deploy:
+  provider: elasticbeanstalk
+  region: eu-central-1
+  app: nestjs-course
+  env: NestjsCourse-env
+  bucket_name: elasticbeanstalk-eu-central-1-053496966641
+  bucket_path: nestjs-course
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY

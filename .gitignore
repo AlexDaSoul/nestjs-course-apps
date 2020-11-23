@@ -5,6 +5,7 @@
 /tmp
 /out-tsc
 /documentation
+*.pem*
 
 # dependencies
 node_modules

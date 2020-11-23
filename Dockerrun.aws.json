@@ -1,0 +1,71 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "auth",
+            "essential": false,
+            "image": "node:14",
+            "hostname": "auth",
+            "memory": 250,
+            "command": "node main",
+            "mountPoints": [
+                {
+                    "sourceVolume": "node",
+                    "containerPath": "/usr/src/app",
+                    "sourcePath": "dist/auth",
+                    "readOnly": true
+                }
+            ],
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 3001
+                }
+            ]
+        },
+        {
+            "name": "tickets",
+            "essential": false,
+            "image": "node:14",
+            "hostname": "tickets",
+            "memory": 250,
+            "command": "node main",
+            "mountPoints": [
+                {
+                    "sourceVolume": "node",
+                    "containerPath": "/usr/src/app",
+                    "sourcePath": "dist/tickets",
+                    "readOnly": true
+                }
+            ],
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 3002
+                }
+            ]
+        },
+        {
+            "name": "user",
+            "essential": false,
+            "image": "node:14",
+            "hostname": "user",
+            "memory": 250,
+            "command": "node main",
+            "mountPoints": [
+                {
+                    "sourceVolume": "node",
+                    "containerPath": "/usr/src/app",
+                    "sourcePath": "dist/user",
+                    "readOnly": true
+                }
+            ],
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 3003
+                }
+            ]
+        }
+    ]
+}
