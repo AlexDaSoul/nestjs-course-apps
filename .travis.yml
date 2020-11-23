@@ -18,10 +18,10 @@ after_success:
 
 deploy:
   provider: elasticbeanstalk
-  region: us-east-2
+  region: eu-central-1
   app: nestjs-course
   env: NestjsCourse-env
-  bucket_name: elasticbeanstalk-us-east-2-053496966641
+  bucket_name: elasticbeanstalk-eu-central-1-053496966641
   bucket_path: nestjs-course
   on:
     branch: main
