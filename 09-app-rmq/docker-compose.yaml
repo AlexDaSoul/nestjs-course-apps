@@ -4,19 +4,20 @@ volumes:
   postgres-data:
   redis-data:
   redis-conf:
-  nats:
+  rmq:
 
 services:
 
-  #### nats
-  nats:
-    container_name: nats
-    image: bitnami/nats:2
+  #### rabbitmq
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    restart: always
     ports:
-      - ${NATS_PORT:-4222}:4222
-      - 8222:8222
+      - ${RMQ_PORT:-5672}:5672
+      - 15672:15672
     volumes:
-      - nats:/etc/nats
+      - rmq:/etc/rmq
 
   #### postgres
   postgres:

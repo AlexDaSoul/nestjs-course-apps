@@ -16,10 +16,13 @@ async function bootstrap() {
   const app = await NestFactory.create(UserModule);
 
   app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.NATS,
+    transport: Transport.RMQ,
     options: {
-      url: `${process.env.NATS_HOST}:${process.env.NATS_PORT}`,
-      queue: process.env.NATS_USER_QUEUE,
+      urls: [`${process.env.RMQ_HOST}:${process.env.RMQ_PORT}`],
+      queue: process.env.RMQ_USER_QUEUE,
+      queueOptions: {
+        durable: false,
+      },
     },
   });
 

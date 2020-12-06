@@ -1,33 +1,29 @@
-import {
-  Logger,
-  Inject,
-  Injectable,
-  OnApplicationBootstrap,
-} from '@nestjs/common';
-import { ClientNats } from '@nestjs/microservices';
+import { Logger, Injectable } from '@nestjs/common';
 import { createCertificate } from 'pem';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import { createClient } from 'redis';
 import { PkiResponse } from '@jws/jws.interfaces';
+
+const publisher = createClient(
+  `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+);
+
+const subscriber = createClient(
+  `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+);
 
 const serviceKey = readFileSync(
   resolve(process.cwd(), 'libs/jws/src/pki/dev.pem'),
 ).toString('utf-8');
 
+const PATTERN = 'pkiKeys';
+
 @Injectable()
-export class PemCertService implements OnApplicationBootstrap {
+export class PemCertService {
   private readonly logger: Logger = new Logger(PemCertService.name);
-  private connect: any;
 
-  constructor(
-    @Inject(process.env.NATS_AUTH_SERVICE) private readonly client: ClientNats,
-  ) {}
-
-  async onApplicationBootstrap() {
-    this.connect = await this.client.connect();
-  }
-
-  public async createCertificate(): Promise<{ [key: string]: string }> {
+  public async createCertificate(): Promise<PkiResponse> {
     return new Promise((resolve, reject) => {
       createCertificate(
         { serviceKey: process.env.DEVELOPMENT ? serviceKey : null },
@@ -47,38 +43,37 @@ export class PemCertService implements OnApplicationBootstrap {
   }
 
   public getKeys(): void {
-    this.connect.on('error', err => {
+    const keys = JSON.parse(subscriber.get(PATTERN));
+
+    process.env.JWT_PUB = keys.JWT_PUB;
+    process.env.JWT_PRIV = keys.JWT_PRIV;
+
+    this.logger.debug(`${PATTERN} get keys`);
+
+    subscriber.on('message', (channel, message) => {
+      if (channel === PATTERN) {
+        const newKeys = JSON.parse(message);
+
+        process.env.JWT_PUB = newKeys.JWT_PUB;
+        process.env.JWT_PRIV = newKeys.JWT_PRIV;
+
+        this.logger.debug(`${PATTERN} update`);
+      }
+    });
+
+    subscriber.subscribe(PATTERN, () => {
+      this.logger.debug(`${PATTERN} subscribe`);
+    });
+
+    subscriber.on('error', err => {
       this.logger.error(err.message);
-    });
-
-    this.connect.request('getPkiKeys', (keys: PkiResponse) => {
-      this.logger.debug('getPkiKeys request');
-
-      process.env.JWT_PUB = keys.JWT_PUB;
-      process.env.JWT_PRIV = keys.JWT_PRIV;
-    });
-
-    this.connect.subscribe('getPkiKeys', (keys: PkiResponse) => {
-      this.logger.debug('getPkiKeys subscribe');
-
-      process.env.JWT_PUB = keys.JWT_PUB;
-      process.env.JWT_PRIV = keys.JWT_PRIV;
     });
   }
 
   public setKeys(keys: PkiResponse): void {
-    this.connect.publish('getPkiKeys', {
-      JWT_PUB: keys.JWT_PUB,
-      JWT_PRIV: keys.JWT_PRIV,
-    });
+    publisher.set(PATTERN, JSON.stringify(keys));
+    publisher.publish(PATTERN, JSON.stringify(keys));
 
-    this.connect.subscribe('getPkiKeys', (msg: PkiResponse, reply: string) => {
-      if (reply) {
-        this.connect.publish(reply, {
-          JWT_PUB: keys.JWT_PUB,
-          JWT_PRIV: keys.JWT_PRIV,
-        });
-      }
-    });
+    this.logger.debug(`${PATTERN} set keys`);
   }
 }

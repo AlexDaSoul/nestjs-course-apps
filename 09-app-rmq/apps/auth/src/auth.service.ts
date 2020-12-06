@@ -1,5 +1,5 @@
 import { Logger, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { ClientNats } from '@nestjs/microservices';
+import { ClientRMQ } from '@nestjs/microservices';
 import { User } from '@dal';
 import { JwsService } from '@jws';
 import { LoginDTO } from './dto/login-dto';
@@ -7,7 +7,7 @@ import { LoginDTO } from './dto/login-dto';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(process.env.NATS_USER_SERVICE) private readonly client: ClientNats,
+    @Inject(process.env.RMQ_USER_SERVICE) private readonly client: ClientRMQ,
     private readonly jwsService: JwsService,
   ) {}
 

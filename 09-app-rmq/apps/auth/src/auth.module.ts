@@ -20,11 +20,14 @@ const redisClient = createClient(
     HealthModule,
     ClientsModule.register([
       {
-        name: process.env.NATS_USER_SERVICE,
-        transport: Transport.NATS,
+        name: process.env.RMQ_USER_SERVICE,
+        transport: Transport.RMQ,
         options: {
-          url: `${process.env.NATS_HOST}:${process.env.NATS_PORT}`,
-          queue: process.env.NATS_USER_QUEUE,
+          urls: [`${process.env.RMQ_HOST}:${process.env.RMQ_PORT}`],
+          queue: process.env.RMQ_USER_QUEUE,
+          queueOptions: {
+            durable: false,
+          },
         },
       },
     ]),
@@ -36,7 +39,7 @@ export class AuthModule implements OnApplicationBootstrap {
   private readonly logger = new Logger(AuthModule.name);
 
   private readonly leader = new Leader(redisClient, {
-    key: process.env.NATS_AUTH_SERVICE,
+    key: process.env.RMQ_AUTH_SERVICE,
     ttl: process.env.REDIS_LEADER_TTL,
   });
 
@@ -46,19 +49,14 @@ export class AuthModule implements OnApplicationBootstrap {
 
   async onApplicationBootstrap() {
     try {
-      const keys = await this.pemService.createCertificate();
-
-      process.env.JWT_PUB = keys.JWT_PUB;
-      process.env.JWT_PRIV = keys.JWT_PRIV;
-
-      this.leader.isLeader((err, isLeader) => {
+      this.leader.isLeader(async (err, isLeader) => {
         this.logger.debug(`isLeader: ${isLeader}`, AuthModule.name);
 
         if (isLeader) {
-          this.pemService.setKeys({
-            JWT_PUB: keys.JWT_PUB,
-            JWT_PRIV: keys.JWT_PRIV,
-          });
+          const keys = await this.pemService.createCertificate();
+
+          this.pemService.setKeys(keys);
+          this.pemService.getKeys();
         } else {
           this.pemService.getKeys();
         }

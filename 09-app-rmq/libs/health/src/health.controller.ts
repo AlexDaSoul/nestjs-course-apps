@@ -32,9 +32,13 @@ export class HealthController {
         ),
       () =>
         this.healthMicroservice.pingCheck('check-ms', {
-          transport: Transport.NATS,
+          transport: Transport.RMQ,
           options: {
-            url: `${process.env.NATS_HOST}:${process.env.NATS_PORT}`,
+            urls: [`${process.env.RMQ_HOST}:${process.env.RMQ_PORT}`],
+            queue: process.env.RMQ_AUTH_QUEUE,
+            queueOptions: {
+              durable: false,
+            },
           },
         }),
       () => {
