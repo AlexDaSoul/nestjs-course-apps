@@ -17,7 +17,7 @@ import { LoginDTO } from './dto/login-dto';
 @ApiHeader({ name: 'autorization' })
 @Controller()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Post('login')
   public async login(@Body() body: LoginDTO): Promise<string> {

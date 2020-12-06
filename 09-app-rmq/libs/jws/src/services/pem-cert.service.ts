@@ -4,10 +4,11 @@ import {
   Injectable,
   OnApplicationBootstrap,
 } from '@nestjs/common';
-import { ClientNats } from '@nestjs/microservices';
+import { ClientRMQ } from '@nestjs/microservices';
 import { createCertificate } from 'pem';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import * as manager from 'amqp-connection-manager';
 import { PkiResponse } from '@jws/jws.interfaces';
 
 const serviceKey = readFileSync(
@@ -17,17 +18,45 @@ const serviceKey = readFileSync(
 @Injectable()
 export class PemCertService implements OnApplicationBootstrap {
   private readonly logger: Logger = new Logger(PemCertService.name);
-  private connect: any;
+  private channel: any;
 
   constructor(
-    @Inject(process.env.NATS_AUTH_SERVICE) private readonly client: ClientNats,
-  ) {}
-
-  async onApplicationBootstrap() {
-    this.connect = await this.client.connect();
+    @Inject(process.env.RMQ_AUTH_SERVICE) private readonly client: ClientRMQ,
+  ) {
   }
 
-  public async createCertificate(): Promise<{ [key: string]: string }> {
+  async onApplicationBootstrap() {
+    this.channel = await this.client.connect();
+    /*    const connect = await manager.connect(`${ process.env.RMQ_HOST }:${ process.env.RMQ_PORT }`);
+        this.channel = connect.createChannel({
+          json: true,
+          setup: c => c.assertQueue(process.env.RMQ_AUTH_QUEUE, { durable: true }),
+        });
+
+        this.channel.publish(process.env.RMQ_AUTH_QUEUE, {hello: 'world'})
+          .then(function() {
+            return console.log("Message was sent!  Hooray!");
+          }).catch(function(err) {
+          return console.log(err);
+        });*/
+
+
+/*
+*
+* */
+
+
+
+    /*    this.channel.consume(process.env.RMQ_AUTH_SERVICE)
+          .then(function() {
+            return console.log("Message was sent!  Hooray!");
+          }).catch(function(err) {
+          return console.log(err);
+        });*/
+    // console.log(this.channel);
+  }
+
+  public async createCertificate(): Promise<PkiResponse> {
     return new Promise((resolve, reject) => {
       createCertificate(
         { serviceKey: process.env.DEVELOPMENT ? serviceKey : null },
@@ -47,38 +76,44 @@ export class PemCertService implements OnApplicationBootstrap {
   }
 
   public getKeys(): void {
-    this.connect.on('error', err => {
+    this.channel.on('error', err => {
       this.logger.error(err.message);
     });
 
-    this.connect.request('getPkiKeys', (keys: PkiResponse) => {
-      this.logger.debug('getPkiKeys request');
+    /*    this.channel.request('getPkiKeys', (keys: PkiResponse) => {
+          this.logger.debug('getPkiKeys request');
 
-      process.env.JWT_PUB = keys.JWT_PUB;
-      process.env.JWT_PRIV = keys.JWT_PRIV;
-    });
+          process.env.JWT_PUB = keys.JWT_PUB;
+          process.env.JWT_PRIV = keys.JWT_PRIV;
+        });*/
 
-    this.connect.subscribe('getPkiKeys', (keys: PkiResponse) => {
-      this.logger.debug('getPkiKeys subscribe');
+    /*    this.channel.subscribe('getPkiKeys', (keys: PkiResponse) => {
+          this.logger.debug('getPkiKeys subscribe');
 
-      process.env.JWT_PUB = keys.JWT_PUB;
-      process.env.JWT_PRIV = keys.JWT_PRIV;
-    });
+          process.env.JWT_PUB = keys.JWT_PUB;
+          process.env.JWT_PRIV = keys.JWT_PRIV;
+        });*/
   }
 
   public setKeys(keys: PkiResponse): void {
-    this.connect.publish('getPkiKeys', {
-      JWT_PUB: keys.JWT_PUB,
-      JWT_PRIV: keys.JWT_PRIV,
+    this.client['publish']({
+      pattern: 'setPemPublicKey',
+      data: {
+        JWT_PUB: keys.JWT_PUB,
+        JWT_PRIV: keys.JWT_PRIV,
+      },
+    }, (packet) => {
+      console.log(packet);
     });
 
-    this.connect.subscribe('getPkiKeys', (msg: PkiResponse, reply: string) => {
-      if (reply) {
-        this.connect.publish(reply, {
-          JWT_PUB: keys.JWT_PUB,
-          JWT_PRIV: keys.JWT_PRIV,
-        });
-      }
-    });
+
+    /*    this.channel.subscribe('getPkiKeys', (msg: PkiResponse, reply: string) => {
+          if (reply) {
+            this.channel.publish(reply, {
+              JWT_PUB: keys.JWT_PUB,
+              JWT_PRIV: keys.JWT_PRIV,
+            });
+          }
+        });*/
   }
 }
