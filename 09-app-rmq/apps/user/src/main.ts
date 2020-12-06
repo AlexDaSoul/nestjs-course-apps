@@ -21,7 +21,7 @@ async function bootstrap() {
       urls: [`${process.env.RMQ_HOST}:${process.env.RMQ_PORT}`],
       queue: process.env.RMQ_USER_QUEUE,
       queueOptions: {
-        durable: false
+        durable: false,
       },
     },
   });

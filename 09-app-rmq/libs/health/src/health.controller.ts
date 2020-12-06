@@ -37,7 +37,7 @@ export class HealthController {
             urls: [`${process.env.RMQ_HOST}:${process.env.RMQ_PORT}`],
             queue: process.env.RMQ_AUTH_QUEUE,
             queueOptions: {
-              durable: false
+              durable: false,
             },
           },
         }),

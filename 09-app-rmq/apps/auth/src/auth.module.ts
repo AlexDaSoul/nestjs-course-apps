@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 config();
 
 const redisClient = createClient(
-  `redis://${ process.env.REDIS_HOST }:${ process.env.REDIS_PORT }`,
+  `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
 );
 
 @Module({
@@ -50,15 +50,13 @@ export class AuthModule implements OnApplicationBootstrap {
   async onApplicationBootstrap() {
     try {
       this.leader.isLeader(async (err, isLeader) => {
-        this.logger.debug(`isLeader: ${ isLeader }`, AuthModule.name);
+        this.logger.debug(`isLeader: ${isLeader}`, AuthModule.name);
 
         if (isLeader) {
           const keys = await this.pemService.createCertificate();
 
-          process.env.JWT_PUB = keys.JWT_PUB;
-          process.env.JWT_PRIV = keys.JWT_PRIV;
-
           this.pemService.setKeys(keys);
+          this.pemService.getKeys();
         } else {
           this.pemService.getKeys();
         }
